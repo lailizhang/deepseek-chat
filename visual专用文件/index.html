@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek 对话界面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <!-- API设置区 -->
+        <div class="bg-warning p-2 text-center" id="apiWarning" style="display: none;">
+            <span>未设置API密钥，功能受限</span>
+            <button class="btn btn-sm btn-outline-dark ms-2" id="showApiBtn">设置API</button>
+        </div>
+        
+        <!-- API设置表单 (初始隐藏) -->
+        <div class="card m-3" id="apiForm" style="display: none;">
+            <div class="card-header bg-info text-white">
+                <h5>API设置</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">API密钥</label>
+                    <input type="password" class="form-control" id="apiKey" placeholder="输入您的API密钥">
+                </div>
+                <button class="btn btn-primary" id="saveApiBtn">保存</button>
+                <button class="btn btn-secondary" id="hideApiBtn">取消</button>
+            </div>
+        </div>
+        
+        <!-- 角色选择区 -->
+        <div class="bg-light p-3" id="roleSelection">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="text-center mb-0">选择对话角色</h2>
+                <button class="btn btn-sm btn-outline-secondary" id="toggleApiBtn">API设置</button>
+            </div>
+            <div class="row" id="roleCards"></div>
+        </div>
+        
+        <!-- 对话界面 (初始隐藏) -->
+        <div id="chatInterface" class="d-none">
+            <div class="chat-header bg-primary text-white p-3 d-flex align-items-center">
+                <button class="btn btn-light me-3" id="backBtn">←</button>
+                <img src="" alt="角色头像" class="avatar-sm me-2" id="currentAvatar">
+                <h4 class="mb-0" id="currentRole"></h4>
+            </div>
+            
+            <div class="chat-messages p-3" id="messageContainer"></div>
+            
+            <div class="chat-input p-3 bg-light">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="messageInput" placeholder="输入消息...">
+                    <button class="btn btn-primary" id="sendBtn">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // 初始化时检查API密钥
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = localStorage.getItem('apiKey');
+            if (!apiKey) {
+                document.getElementById('apiWarning').style.display = 'block';
+            }
+            
+            // API设置按钮事件
+            document.getElementById('toggleApiBtn').addEventListener('click', () => {
+                document.getElementById('apiForm').style.display = 'block';
+                document.getElementById('roleSelection').style.display = 'none';
+            });
+            
+            document.getElementById('showApiBtn').addEventListener('click', () => {
+                document.getElementById('apiForm').style.display = 'block';
+                document.getElementById('apiWarning').style.display = 'none';
+            });
+            
+            document.getElementById('hideApiBtn').addEventListener('click', () => {
+                document.getElementById('apiForm').style.display = 'none';
+                document.getElementById('roleSelection').style.display = 'block';
+            });
+            
+            document.getElementById('saveApiBtn').addEventListener('click', () => {
+                const apiKey = document.getElementById('apiKey').value;
+                if (apiKey) {
+                    localStorage.setItem('apiKey', apiKey);
+                    document.getElementById('apiForm').style.display = 'none';
+                    document.getElementById('apiWarning').style.display = 'none';
+                    document.getElementById('roleSelection').style.display = 'block';
+                    alert('API密钥已保存！');
+                } else {
+                    alert('请输入API密钥');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
